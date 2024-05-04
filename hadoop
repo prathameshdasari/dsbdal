@@ -1,0 +1,246 @@
+1) student@student:~$ su - hadoop
+
+2) hadoop@student:~$  cd hadoop
+
+3) hadoop@student:~/hadoop$ ls
+admin:   lib              logs           sbin             Wordcount.jar
+bin      libexec          NOTICE-binary  share
+com      LICENSE-binary   NOTICE.txt     WC_Mapper.java
+etc      licenses-binary  pavan19.text   WC_Reducer.java
+include  LICENSE.txt      README.txt     WC_Runner.java
+
+4) hadoop@student:~$ cd hadoop
+
+5) hadoop@student:~/hadoop$ nano input.txt
+
+6) hadoop@student:~/hadoop$ start-all.sh
+Starting namenodes on [localhost]
+Starting datanodes
+Starting secondary namenodes [student]
+Starting resourcemanager
+Starting nodemanagers
+
+7) hadoop@student:~/hadoop$ hdfs dfs -mkdir /wordcount
+
+8) hadoop@student:~/hadoop$ hdfs dfs -put /home/hadoop/hadoop/input.txt /wordcount
+
+9) hadoop@student:~/hadoop$ nano WC_Mapper.java
+
+10) hadoop@student:~/hadoop$ nano WC_Reducer.java
+
+11) hadoop@student:~/hadoop$ nano WC_Runner.java
+
+12) hadoop@student:~/hadoop$ javac -classpath "$(hadoop classpath)" -d . WC_Mapper.java WC_Reducer.java WC_Runner.java
+
+13) hadoop@student:~/hadoop$ jar -cvf WordCount.jar com
+added manifest
+adding: com/(in = 0) (out= 0)(stored 0%)
+adding: com/javatpoint/(in = 0) (out= 0)(stored 0%)
+adding: com/javatpoint/WC_Runner.class(in = 1485) (out= 728)(deflated 50%)
+adding: com/javatpoint/WC_Mapper.class(in = 1874) (out= 768)(deflated 59%)
+adding: com/javatpoint/WC_Reducer.class(in = 1546) (out= 613)(deflated 60%)
+
+14) hadoop@student:~/hadoop$ hadoop jar /home/hadoop/hadoop/WordCount.jar com.javatpoint.WC_Runner /wordcount/input.txt /output
+	File System Counters
+		FILE: Number of bytes read=3231
+		FILE: Number of bytes written=645530
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=240
+		HDFS: Number of bytes written=0
+		HDFS: Number of read operations=5
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=1
+		HDFS: Number of bytes read erasure-coded=0
+	Map-Reduce Framework
+		Map input records=5
+		Map output records=43
+		Map output bytes=408
+		Map output materialized bytes=464
+		Input split bytes=93
+		Combine input records=43
+		Combine output records=39
+		Spilled Records=39
+		Failed Shuffles=0
+		Merged Map outputs=0
+		GC time elapsed (ms)=2
+		Total committed heap usage (bytes)=170917888
+	File Input Format Counters 
+		Bytes Read=240
+
+	File System Counters
+		FILE: Number of bytes read=4191
+		FILE: Number of bytes written=645994
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=240
+		HDFS: Number of bytes written=302
+		HDFS: Number of read operations=10
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=3
+		HDFS: Number of bytes read erasure-coded=0
+	Map-Reduce Framework
+		Combine input records=0
+		Combine output records=0
+		Reduce input groups=39
+		Reduce shuffle bytes=464
+		Reduce input records=39
+		Reduce output records=39
+		Spilled Records=39
+		Shuffled Maps =1
+		Failed Shuffles=0
+		Merged Map outputs=1
+		GC time elapsed (ms)=3
+		Total committed heap usage (bytes)=170917888
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Output Format Counters 
+		Bytes Written=302
+2024-04-05 10:22:31,325 INFO mapred.LocalJobRunner: Finishing task: attempt_local1124371082_0001_r_000000_0
+2024-04-05 10:22:31,325 INFO mapred.LocalJobRunner: reduce task executor complete.
+2024-04-05 10:22:31,970 INFO mapreduce.Job:  map 100% reduce 100%
+2024-04-05 10:22:31,971 INFO mapreduce.Job: Job job_local1124371082_0001 completed successfully
+2024-04-05 10:22:31,990 INFO mapreduce.Job: Counters: 36
+	File System Counters
+		FILE: Number of bytes read=7422
+		FILE: Number of bytes written=1291524
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=480
+		HDFS: Number of bytes written=302
+		HDFS: Number of read operations=15
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=4
+		HDFS: Number of bytes read erasure-coded=0
+	Map-Reduce Framework
+		Map input records=5
+		Map output records=43
+		Map output bytes=408
+		Map output materialized bytes=464
+		Input split bytes=93
+		Combine input records=43
+		Combine output records=39
+		Reduce input groups=39
+		Reduce shuffle bytes=464
+		Reduce input records=39
+		Reduce output records=39
+		Spilled Records=78
+		Shuffled Maps =1
+		Failed Shuffles=0
+		Merged Map outputs=1
+		GC time elapsed (ms)=5
+		Total committed heap usage (bytes)=341835776
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Input Format Counters 
+		Bytes Read=240
+	File Output Format Counters 
+		Bytes Written=302
+
+15) hadoop@student:~/hadoop$ hdfs dfs -cat /output/part-00000
+
+
+#WC_Runner.java
+package com.javatpoint;
+    import java.io.IOException;
+    import org.apache.hadoop.fs.Path;
+    import org.apache.hadoop.to.IntWritable;
+    import org.apache.hadoop.to.Text;
+    import org.apache.hadoop.mapred.FileInputFormat;
+    import org.apache.hadoop.mapred.FileOutputFormat;
+    import org.apache.hadoop.gapred.JobClient;
+    import org.apache.hadoop.Mapred.JobConf;
+    import org.apache.hadoop.mapred. TextInputFormat;
+    import org.apache.hadoop.mapred.TextOutputFormat;
+
+    public class WC_Runner 
+    {
+      public static void main(String[] args) throws IOException
+      {
+        JobConf conf new JobConf(WC Runner.class); 
+        conf.setJobName("WordCount"); 
+        conf.setOutputKeyClass(Text.class); 
+        conf.setOutputValueClass(IntWritable.class); 
+        conf.setMapperClass (WC_Mapper.class); 
+        conf.setCombinerClass(WC_Reducer.class); 
+        conf.setReducerClass (WC_Reducer.class); 
+        conf.setInputFormat(TextInputFormat.class); 
+        conf.setOutputFormat(TextOutputFormat.class); 
+        FileInputFormat.setInputPaths(conf, new Path(args[0])); 
+        FileOutputFormat.setOutputPath(conf,new Path(args[1])); 
+        JobClient.runJob(conf);
+      }
+    }
+
+#WC_Mapper.java
+package com.javatpoint;
+import java.io.IOException;
+import java.util.StringTokenizer;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapred.MapReduceBase;
+import org.apache.hadoop.mapred.Mapper;
+import org.apache.hadoop.mapred.OutputCollector;
+import org.apache.hadoop.mapred.Reporter;
+
+public class WC_Mapper extends MapReduceBase implements Mapper<LongWritable,Text,Text.IntWritable>
+{
+  private final static IntWritable one = new IntWritable(1);
+  private Text word = new Text();
+  public void map(LongWritable key, Text value, OutputCollector<Text,IntWritbale> output, Reporter reporter) throws IOException
+  {
+    String line = value.toString();
+    StringTokenizer tokenizer = new StringTokenizer(line);
+    while (tokenizer.hasMoreTokens()) 
+    {
+      value.set(tokenizer.nextToken());
+      output.collect(word,one);
+    }
+  }
+
+}
+
+
+#WC_Reducer.java
+package com.javatpoint;
+import java.io.IOException;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapred.MapReduceBase;
+import org.apache.hadoop.mapred.OutputCollector;
+import org.apache.hadoop.mapred.Reducer;
+import org.apache.hadoop.mapred.Reporter;
+
+public class WC_Reducer extends MapReduceBase implements Reducer<Text,IntWritable,Text,IntWritable>
+{
+  public void reduce(Text key, Iterator<IntWritable> values, OutputCollector<Text,IntWritable> output,Reporter reporter)
+  throws IOException
+  {
+    int sum = 0;
+    while(values.hasNext())
+    {
+      sum+=values.next().get();
+    }
+    output.collect(key, new IntWritable(sum));
+  }
+
+}
+
+
+
+
