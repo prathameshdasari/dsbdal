@@ -1,0 +1,21 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+data = pd.read_csv("titanic.csv")
+data
+
+data['Age'].isnull().sum()
+data['Age'] = data['Age'].fillna(data['Age'].mean())
+
+plt.figure(figsize=(20,10))
+sns.boxplot(x='Sex', y = 'Age', data=data)
+
+plt.figure(figsize=(20,10))
+sns.boxplot(x='Sex', y = 'Age', data=data, hue = 'Survived')
+
+sns.boxplot(x='Sex', y = 'Age', data=data, hue = 'Survived')
+
+plt.figure(figsize=(20,10))
+sns.violinplot(x='Sex', y = 'Age', data=data, hue = 'Survived')
