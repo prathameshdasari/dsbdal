@@ -1,0 +1,40 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+academic_df = pd.read_csv("")
+
+academic_df.dropna(inplace=True)
+
+academic_df['numeric_column'].fillna(academic_df['numeric_column'].mean(), inplace=True)
+academic_df['categorical_column'].fillna(academic_df['categorical_column'].mode()[0], inplace=True)
+
+
+# Check for outliers using descriptive statistics or visualization (e.g., box plots)
+numeric_variables = academic_df.select_dtypes(include=['int64', 'float64']).columns
+for column in numeric_variables:
+    # Example of using descriptive statistics (IQR method)
+    Q1 = academic_df[column].quantile(0.25)
+    Q3 = academic_df[column].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    outliers = academic_df[(academic_df[column] < lower_bound) | (academic_df[column] > upper_bound)]
+    print("Outliers in", column, ":", outliers)
+
+academic_df = academic_df[(academic_df[column] >= lower_bound) & (academic_df[column] <= upper_bound)]
+
+
+# Check categorical variables and their unique values
+categorical_variables = academic_df.select_dtypes(include=['object']).columns
+for column in categorical_variables:
+    print(column, ":", academic_df[column].unique())
+
+# Apply data transformation (e.g., one-hot encoding, label encoding)
+# Option 1: One-hot encoding
+# academic_df = pd.get_dummies(academic_df, columns=categorical_variables)
+
+# Option 2: Label encoding (for ordinal categorical variables)
+# from sklearn.preprocessing import LabelEncoder
+# label_encoder = LabelEncoder()
+# academic_df['categorical_column'] = label_encoder.fit_transform(academic_df['categorical_column'])
