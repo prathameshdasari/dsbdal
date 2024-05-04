@@ -14,6 +14,7 @@ df.describe()
 df.info()
 df.unique
 df.nunique
+df.isnull().sum()
 
 df[].fillna(0)
 df[] = df[].replace(np.NaN, df[].mean())
