@@ -1,0 +1,30 @@
+import numpy as np
+import pandas as pd
+from sklearn.imputer import SimpleImputer
+from sklearn.preprocessing import LabelEncoder
+
+
+
+df = pd.read_csv("")
+
+df.shape()
+df.columns
+df.dtypes
+df.describe()
+df.info()
+df.unique
+df.nunique
+
+df[].fillna(0)
+df[] = df[].replace(np.NaN, df[].mean())
+imputer = SimpleImputer(strategy = "most_frequent")
+imputer.fit_transform(df[])
+
+df['category'] = df['category'].astype('category')
+
+label_encoder = LabelEncoder()
+df['category'] = label_encoder.fit_transform(df['category'])
+df = pd.get_dummies(df, columns=['',''])
+
+
+
