@@ -1,0 +1,42 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import re
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+import emoji
+
+# Load the dataset
+amazon_df = pd.read_csv('Amazon_Alexa_Reviews_Dataset.csv')
+
+# I. Plot a graph of Positive and Negative Feedback
+feedback_counts = amazon_df['feedback'].value_counts()
+plt.bar(feedback_counts.index, feedback_counts.values)
+plt.xlabel('Feedback')
+plt.ylabel('Count')
+plt.title('Positive vs. Negative Feedback')
+plt.show()
+
+# II. Convert the review text into lowercase
+amazon_df['review'] = amazon_df['review'].str.lower()
+
+# III. Remove all punctuations from review text
+amazon_df['review'] = amazon_df['review'].apply(lambda x: re.sub(r'[^\w\s]', '', x))
+
+# IV. Remove emoticons and emojis from the text
+def remove_emoji(text):
+    return emoji.get_emoji_regexp().sub(r'', text)
+
+amazon_df['review'] = amazon_df['review'].apply(remove_emoji)
+
+# V. Tokenize the review text into words
+nltk.download('punkt')
+amazon_df['tokenized_review'] = amazon_df['review'].apply(word_tokenize)
+
+# VI. Remove the Stopwords from the tokenized text
+nltk.download('stopwords')
+stop_words = set(stopwords.words('english'))
+amazon_df['filtered_review'] = amazon_df['tokenized_review'].apply(lambda x: [word for word in x if word not in stop_words])
+
+# Display the modified dataframe
+print(amazon_df.head())
