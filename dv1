@@ -1,0 +1,81 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+data = pd.read_csv("titanic.csv")
+data.head()
+data
+
+sns.countplot(x='Sex', data=data)
+plt.title('Passenger Count by Gender')
+plt.show()
+
+sns.countplot(x='Pclass', hue='Survived', data=data)
+plt.title('Passenger Count by Class and Survival Status')
+plt.show()
+
+plt.figure(figsize=(20, 20))
+sns.boxplot(x='Pclass', y='Fare', hue='Survived', data=data)
+plt.title('Distribution of Fares by Class and Survival Status')
+plt.show()
+
+plt.figure(figsize=(20,10))
+sns.scatterplot(x='Age', y='Fare', hue='Survived', data=data)
+plt.title('Distribution of Fares by Age and Survival Status')
+plt.show()
+
+plt.figure(figsize=(20,10))
+sns.histplot(data['Fare'], bins=20, kde=False)
+plt.title('Distribution of Ticket Prices')
+plt.xlabel('Fare')
+plt.ylabel('Frequency')
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
