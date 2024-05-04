@@ -1,0 +1,45 @@
+import pandas as pd
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+
+# Load the dataset
+amazon_df = pd.read_csv('Amazon_Alexa_Reviews_Dataset.csv')
+
+# I. Remove all punctuations from review text
+amazon_df['review'] = amazon_df['review'].str.replace(r'[^\w\s]', '')
+
+# II. Tokenize the review text into words
+amazon_df['tokenized_review'] = amazon_df['review'].apply(word_tokenize)
+
+# III. Remove the Stopwords from the tokenized text
+nltk.download('stopwords')
+stop_words = set(stopwords.words('english'))
+amazon_df['filtered_review'] = amazon_df['tokenized_review'].apply(lambda x: [word for word in x if word.lower() not in stop_words])
+
+# IV. Perform stemming & lemmatization on the review text
+stemmer = PorterStemmer()
+lemmatizer = WordNetLemmatizer()
+
+amazon_df['stemmed_review'] = amazon_df['filtered_review'].apply(lambda x: [stemmer.stem(word) for word in x])
+amazon_df['lemmatized_review'] = amazon_df['filtered_review'].apply(lambda x: [lemmatizer.lemmatize(word) for word in x])
+
+# V. Perform word vectorization using Bag of Words technique
+# Initialize CountVectorizer
+count_vectorizer = CountVectorizer()
+
+# Fit and transform the review text
+bow_matrix = count_vectorizer.fit_transform(amazon_df['lemmatized_review'].apply(' '.join))
+
+# VI. Create representation of Review Text by calculating Term Frequency and Inverse Document Frequency (TF-IDF)
+# Initialize TfidfVectorizer
+tfidf_vectorizer = TfidfVectorizer()
+
+# Fit and transform the review text
+tfidf_matrix = tfidf_vectorizer.fit_transform(amazon_df['lemmatized_review'].apply(' '.join))
+
+# Print the dimensions of the Bag of Words matrix and TF-IDF matrix
+print("Dimensions of Bag of Words matrix:", bow_matrix.shape)
+print("Dimensions of TF-IDF matrix:", tfidf_matrix.shape)
