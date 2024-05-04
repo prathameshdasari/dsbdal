@@ -1,0 +1,71 @@
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score
+
+# Load the dataset
+dataset = pd.read_csv('Social_Network_Ads.csv')
+
+# Display the first few rows of the dataset
+print("Dataset preview:")
+print(dataset.head())
+
+# Extract features and target variable
+X = dataset.iloc[:, [2, 3]].values
+y = dataset.iloc[:, 4].values
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=0)
+
+# Feature scaling
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
+
+# Train the logistic regression model
+classifier = LogisticRegression(random_state=0)
+classifier.fit(X_train, y_train)
+
+# Predicting the test set results
+y_pred = classifier.predict(X_test)
+
+# Compute confusion matrix
+cm = confusion_matrix(y_test, y_pred)
+print("Confusion Matrix:")
+print(cm)
+
+# Extract TP, FP, TN, FN
+TN = cm[0][0]
+FP = cm[0][1]
+FN = cm[1][0]
+TP = cm[1][1]
+
+# Calculate accuracy
+accuracy = accuracy_score(y_test, y_pred)
+
+# Calculate error rate
+error_rate = 1 - accuracy
+
+# Calculate precision
+precision = precision_score(y_test, y_pred)
+
+# Calculate recall
+recall = recall_score(y_test, y_pred)
+
+# Print performance metrics
+print("Accuracy:", accuracy)
+print("Error Rate:", error_rate)
+print("Precision:", precision)
+print("Recall:", recall)
+
+# Visualization of confusion matrix (optional)
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+plt.xlabel('Predicted labels')
+plt.ylabel('True labels')
+plt.title('Confusion Matrix')
+plt.show()
