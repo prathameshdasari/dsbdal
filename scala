@@ -16,7 +16,7 @@ $su
 #cat part-00001
 
 
-#nano Checknum.java
+#nano Checknum.scala
 object Checknum
 {
   def main(args: Array[String]): Unit =
@@ -40,7 +40,7 @@ object Checknum
   }
 }
 
-#nano Largestnum.java
+#nano Largestnum.scala
 object Largestnum
 {
   def main(args: Array[String])=unit
