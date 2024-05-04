@@ -1,0 +1,54 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score
+
+# Load the dataset
+dataset = pd.read_csv('iris.csv')
+
+# Display the first few rows of the dataset
+print("Dataset preview:")
+print(dataset.head())
+
+# Extract features and target variable
+X = dataset.iloc[:, :-1].values
+y = dataset.iloc[:, -1].values
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=0)
+
+# Train the Naïve Bayes classifier
+classifier = GaussianNB()
+classifier.fit(X_train, y_train)
+
+# Predicting the test set results
+y_pred = classifier.predict(X_test)
+
+# Compute confusion matrix
+cm = confusion_matrix(y_test, y_pred)
+print("Confusion Matrix:")
+print(cm)
+
+# Extract TP, FP, TN, FN
+TN = cm[0][0]
+FP = cm[0][1]
+FN = cm[1][0]
+TP = cm[1][1]
+
+# Calculate accuracy
+accuracy = accuracy_score(y_test, y_pred)
+
+# Calculate error rate
+error_rate = 1 - accuracy
+
+# Calculate precision
+precision = precision_score(y_test, y_pred, average='micro')
+
+# Calculate recall
+recall = recall_score(y_test, y_pred, average='micro')
+
+# Print performance metrics
+print("Accuracy:", accuracy)
+print("Error Rate:", error_rate)
+print("Precision:", precision)
+print("Recall:", recall)
