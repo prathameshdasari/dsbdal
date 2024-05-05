@@ -196,3 +196,36 @@ for column in columns:
     column_data = filtered_data[column].tolist()
     mean, mode, median, variance, std_dev, skewness = calculate_statistics(column_data)
     print(f"Statistics for {column}:", "\nMean:", mean, "\nMode:", mode, "\nMedian:", median, "\nVariance:", variance, "\nStandard Deviation:", std_dev, "\nSkewness:", skewness, "\n")
+
+
+# IRIS2
+
+iris_df = pd.read_csv("iris.csv")
+
+# Filter data for each species
+setosa_data = iris_df[iris_df['species'] == 'Iris-setosa']
+versicolor_data = iris_df[iris_df['species'] == 'Iris-versicolor']
+virginica_data = iris_df[iris_df['species'] == 'Iris-virginica']
+
+# Display basic statistical details
+print("Statistics for Iris-setosa:")
+print(setosa_data.describe())
+print("\nStatistics for Iris-versicolor:")
+print(versicolor_data.describe())
+print("\nStatistics for Iris-virginica:")
+print(virginica_data.describe())
+
+# Measures of variability
+print("\nMeasures of Variability:")
+print("Standard Deviation for Iris-setosa:")
+print(setosa_data.std())
+print("\nStandard Deviation for Iris-versicolor:")
+print(versicolor_data.std())
+print("\nStandard Deviation for Iris-virginica:")
+print(virginica_data.std())
+
+# Correlation visualization
+correlation_matrix = iris_df.corr()
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm')
+plt.title('Correlation Heatmap of Iris Dataset')
+plt.show()
