@@ -1,0 +1,35 @@
+import scala.io.Source
+
+object LogAnalytics {
+  def main(args: Array[String]): Unit = {
+    // Specify the path to your CSV log file
+    val logFilePath = "path/to/your/logfile.csv"
+    
+    // Read the CSV log file
+    val lines = Source.fromFile(logFilePath).getLines().toList
+
+    // Extract hosts and URLs from log lines
+    val hostsAndUrls = lines.map(_.split(",")).flatMap {
+      case Array(host, _, _, _, url, _, _) if host != "null" && url != "null" => Some((host, url))
+      case _ => None
+    }
+
+    // (I) Display the list of top 10 frequent hosts
+    val frequentHosts = hostsAndUrls.groupBy(_._1).mapValues(_.size).toList.sortBy(-_._2).take(10)
+    println("Top 10 frequent hosts:")
+    frequentHosts.foreach { case (host, count) =>
+      println(s"$host: $count")
+    }
+
+    // (II) Display the list of top 5 URLs or paths
+    val frequentUrls = hostsAndUrls.groupBy(_._2).mapValues(_.size).toList.sortBy(-_._2).take(5)
+    println("\nTop 5 URLs or paths:")
+    frequentUrls.foreach { case (url, count) =>
+      println(s"$url: $count")
+    }
+
+    // (III) Display the number of unique Hosts
+    val uniqueHosts = hostsAndUrls.map(_._1).distinct.size
+    println(s"\nNumber of unique hosts: $uniqueHosts")
+  }
+}
