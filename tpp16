@@ -4,12 +4,13 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+import string
 
 # Load the dataset
 amazon_df = pd.read_csv('Amazon_Alexa_Reviews_Dataset.csv')
 
 # I. Remove all punctuations from review text
-amazon_df['review'] = amazon_df['review'].str.replace(r'[^\w\s]', '')
+amazon_df['review'] = amazon_df['review'].apply(lambda x: ''.join([char for char in x if char not in string.punctuation]))
 
 # II. Tokenize the review text into words
 amazon_df['tokenized_review'] = amazon_df['review'].apply(word_tokenize)
