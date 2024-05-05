@@ -77,7 +77,20 @@ print(mode_income)
 mode_income = statistics.mode(data['Income'])
 print(mode_income)
 
+
+
 # Calculating Variance using Formula (without libraries)
+n = len(scores)
+score_mean = sum(scores) / n
+score_var = sum((item - score_mean)**2 for item in scores) / (n - 1)
+print(score_var)
+
+# Finding Variance using Libraries
+# Using Statistics library function
+score_var = statistics.variance(scores)
+print(score_var)
+
+#std without library
 income_std = income_var**0.5
 print(income_std)
 
