@@ -21,7 +21,7 @@ plt.show()
 amazon_df['review'] = amazon_df['review'].str.lower()
 
 # III. Remove all punctuations from review text
-amazon_df['review'] = amazon_df['review'].apply(lambda x: re.sub(r'[^\w\s]', '', x))
+amazon_df['review'] = amazon_df['review'].apply(lambda x: ''.join([char for char in x if char not in string.punctuation]))
 
 # IV. Remove emoticons and emojis from the text
 def remove_emoji(text):
