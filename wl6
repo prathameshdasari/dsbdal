@@ -1,0 +1,36 @@
+import scala.io.Source
+
+object LogAnalytics {
+  def main(args: Array[String]): Unit = {
+    // Specify the path to your CSV log file
+    val logFilePath = "path/to/your/logfile.csv"
+    
+    // Read the CSV log file
+    val lines = Source.fromFile(logFilePath).getLines().toList
+
+    // Extract response codes and hosts from log lines
+    val responseCodeAndHost = lines.map(_.split(",")).collect {
+      case Array(_, _, _, _, _, _, _, _, _, _, responseCode, _, _, _, _, _, _, host, _*) => (responseCode.toInt, host)
+    }
+
+    // (I) Display the count of 404 Response Codes
+    val count404 = responseCodeAndHost.count(_._1 == 404)
+    println(s"Count of 404 Response Codes: $count404")
+
+    // (II) Display the list of Top Twenty-five 404 Response Code Hosts
+    val top25Hosts404 = responseCodeAndHost.filter(_._1 == 404)
+      .groupBy(_._2)
+      .mapValues(_.size)
+      .toList
+      .sortBy(-_._2)
+      .take(25)
+    println("\nTop Twenty-five 404 Response Code Hosts:")
+    top25Hosts404.foreach { case (host, count) =>
+      println(s"$host: $count")
+    }
+
+    // (III) Display the number of Unique Daily Hosts
+    val uniqueDailyHosts = lines.map(_.split(",")(3).substring(1, 11)).distinct.size
+    println(s"\nNumber of Unique Daily Hosts: $uniqueDailyHosts")
+  }
+}
